@@ -1,0 +1,199 @@
+/* Fondo general */
+.admin-wrapper {
+  position: relative;
+  min-height: 100vh;
+  background: url("assets/fondo.jpg") no-repeat center center/cover;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Capa de oscurecimiento + blur */
+.background-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgb(255, 255, 255);
+  backdrop-filter: blur(4px);
+  z-index: 0;
+}
+
+/* Contenedor principal */
+.admin-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.892);
+  backdrop-filter: blur(8px);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px rgb(0, 0, 0);
+  width: 100%;
+  max-width: 1000px;
+  color: #ffffff;
+}
+
+/* Título */
+h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+/* Mapa */
+#map {
+  height: 500px;
+  width: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.5rem; 
+  margin-top: 2rem;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+thead {
+  background: rgba(33, 150, 243, 0.2);
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  font-weight: 600;
+  color: #030c14;
+  font-size: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+td {
+  color: #ddd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Filas alternas */
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Hover fila */
+tbody tr:hover {
+  background: rgba(33, 150, 243, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+/* Botón Asignar */
+.assign-btn {
+  padding: 6px 12px;
+  background-color: #f39c21; /* Naranja principal */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.assign-btn:hover {
+  background-color: #d9821e; /* Naranja más oscuro para hover */
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  th, td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Estilos para el modal del Admin */
+.p-dialog {
+  background: rgba(30, 30, 30, 0.95) !important;
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  overflow: hidden;
+
+  .p-dialog-header {
+    background: rgba(33, 150, 243, 0.15);
+    color: #f39c21;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    color: #fff;
+  }
+
+  .p-dialog-content {
+    padding: 1.5rem;
+    background: transparent; /* Mantiene la transparencia oscura */
+  }
+
+  .p-dialog-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: transparent;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+}
+
+/* Campo de texto */
+.p-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #ddd;
+}
+
+.p-inputtext {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #fff;
+    box-shadow: 0 0 6px #d9821e;
+  }
+}
+
+/* Botones */
+button.p-button {
+  background-color: #f39c21; /* Naranja principal */
+  border: none;
+  border-radius: 6px;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button.p-button:hover {
+  background-color: #d9821e; /* Naranja más oscuro para hover */
+}
+
+button.p-button.p-button-secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ccc;
+}
+
+button.p-button.p-button-secondary:hover {
+  background-color: rgba(0, 0, 0, 0.2); /* Mantener hover original para botones secundarios */
+}

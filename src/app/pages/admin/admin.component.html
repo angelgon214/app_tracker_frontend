@@ -1,0 +1,74 @@
+<div class="admin-wrapper">
+  <div class="background-overlay"></div>
+  <div class="admin-card">
+    <h2>¡Bienvenido!</h2>
+    <app-header></app-header>
+    <!-- Mapa -->
+    <div id="map" style="height: 400px; margin-bottom: 1rem"></div>
+
+    <!-- Tabla de deliveries -->
+    <p-table
+      [value]="deliveries"
+      [paginator]="true"
+      [rows]="5"
+      [responsiveLayout]="'scroll'"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Usuario</th>
+          <th>Estatus</th>
+          <th>Ubicación</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-delivery>
+        <tr (click)="selectDelivery(delivery.userId)">
+          <td>{{ delivery.username }}</td>
+          <td>{{ delivery.status }}</td>
+          <td>{{ delivery.lat.toFixed(4) }}, {{ delivery.lng.toFixed(4) }}</td>
+          <td>
+            <button
+              pButton
+              label="Asignar paquete"
+              (click)="
+                openAssignPackagesModal(delivery.userId);
+                $event.stopPropagation()
+              "
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- Modal -->
+<p-dialog
+  header="Ubicación"
+  [(visible)]="assignModalVisible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '400px' }"
+>
+  <div class="p-field">
+    <label for="address">Dirección de entrega</label>
+    <input
+      id="address"
+      type="text"
+      pInputText
+      [(ngModel)]="newPackageAddress"
+    />
+  </div>
+
+  <!-- Footer con botones -->
+  <ng-template pTemplate="footer">
+    <button pButton label="Agregar" (click)="assignPackage()"></button>
+    <button
+      pButton
+      label="Cancelar"
+      class="p-button-secondary"
+      (click)="assignModalVisible = false"
+    ></button>
+  </ng-template>
+</p-dialog>
+<p-toast></p-toast>

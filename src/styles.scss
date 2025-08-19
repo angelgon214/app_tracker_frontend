@@ -1,0 +1,12 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'leaflet/dist/leaflet.css';
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Quitar translucidez del toast */
+.p-toast .p-toast-message {
+  background: #1e1e1e !important; /* Fondo sólido oscuro */
+  opacity: 1 !important; /* Sin transparencia */
+}

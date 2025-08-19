@@ -1,0 +1,117 @@
+.login-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: url("assets/fondo.jpg") no-repeat center center/cover;
+  padding: 1rem;
+}
+
+.background-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgb(255, 255, 255);
+  backdrop-filter: blur(3px);
+  z-index: 0;
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.892);
+  backdrop-filter: blur(8px);
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px rgb(0, 0, 0);
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.logo img {
+  max-width: 80px;  
+  margin-bottom: 1rem;
+}
+
+h2 {
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.float-label {
+  position: relative;
+  margin-bottom: 1.5rem;
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-bottom: 2px solid #0d39a0a3;
+    background: transparent;
+    outline: none;
+    font-size: 1rem;
+    color: #fff;
+    transition: border-color 0.3s, color 0.3s;
+  }
+
+  input:focus {
+    border-color: #0d39a0a3;
+  }
+
+  label {
+    position: absolute;
+    left: 0.75rem;
+    top: 0.75rem;
+    color: #e3e3e3;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+
+  input:focus + label,
+  input:not(:placeholder-shown) + label {
+    top: -0.6rem;
+    left: 0.6rem;
+    font-size: 0.8rem;
+    background: rgba(30, 30, 30, 0.85);
+    padding: 0 0.25rem;
+    color: #f39c21;
+  }
+}
+
+.login-button {
+  width: 100%;
+  font-size: 1.1rem;
+}
+
+.login-credentials {
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  font-family: Arial, sans-serif;
+  font-size: 0.95rem;
+  color: #e6e6e6;
+  text-align: left;
+
+  p {
+    margin: 0.5rem 0;
+  }
+
+  strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: "Courier New", monospace;
+    font-size: 0.9rem;
+    color: #f39c21; // resalta la contraseña
+  }
+}

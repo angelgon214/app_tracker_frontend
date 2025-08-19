@@ -1,0 +1,63 @@
+<p-toast position="top-right"></p-toast>
+<div class="login-wrapper">
+  <div class="background-overlay"></div>
+  <div class="login-card">
+    <div class="logo">
+      <img src="assets/iniciar.png" alt="Logo" />
+    </div>
+
+    <h2>Inicio de Sesión</h2>
+
+    <div class="p-fluid">
+      <div class="p-field float-label">
+        <input
+          id="username"
+          type="text"
+          pInputText
+          [(ngModel)]="username"
+          required
+          placeholder=" "
+        />
+        <label for="username">Usuario</label>
+      </div>
+
+      <div class="p-field float-label">
+        <input
+          id="password"
+          type="password"
+          pInputText
+          [(ngModel)]="password"
+          required
+          placeholder=" "
+        />
+        <label for="password">Contraseña</label>
+      </div>
+
+      <button
+        pButton
+        label="Iniciar Sesión"
+        class="login-button"
+        (click)="login()"
+      ></button>
+
+      <!-- Credenciales de prueba -->
+<div class="login-credentials">
+  <p><strong>Usuarios de prueba:</strong></p>
+  
+  <p>
+    <strong>Administrador</strong> → usuario: <code>admin</code>
+  </p>
+  
+  <p>
+    <strong>Delivery's</strong> → usuarios: 
+    <code>delivery</code>, <code>delivery2</code>, <code>delivery3</code>
+  </p>
+  
+  <p>
+    <strong>Contraseña (para todos):</strong> <code>password123</code>
+  </p>
+</div>
+
+    </div>
+  </div>
+</div>

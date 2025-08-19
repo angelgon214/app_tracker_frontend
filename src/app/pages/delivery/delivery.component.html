@@ -1,0 +1,41 @@
+<div class="delivery-wrapper">
+  <div class="background-overlay"></div>
+  <div class="delivery-card">
+    <h2>¡Bienvenido!</h2>
+    <app-header></app-header>
+    <p>Tu ubicación esta siendo compartida con el administrador.</p>
+    <!-- Mapa -->
+    <div id="map" style="height: 400px; margin-bottom: 1rem"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Destino</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pkg of packages">
+          <td>{{ pkg.id }}</td>
+          <td>{{ pkg.address }}</td>
+          <td>
+            <select
+              [value]="pkg.status"
+              (change)="updatePackageStatus(pkg.id, $event)"
+              [ngClass]="{
+                'status-regresado': pkg.status === 'Regresado',
+                'status-en-transito': pkg.status === 'En transito',
+                'status-entregado': pkg.status === 'Entregado'
+              }"
+            >
+            <option>Regresado</option>
+              <option>En transito</option>
+              <option>Entregado</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

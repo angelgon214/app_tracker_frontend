@@ -1,0 +1,141 @@
+/* Fondo general */
+.delivery-wrapper {
+  position: relative;
+  min-height: 100vh;
+  background: url("assets/fondo.jpg") no-repeat center center/cover;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Capa de oscurecimiento + blur */
+.background-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgb(255, 255, 255);
+  backdrop-filter: blur(4px);
+  z-index: 0;
+}
+
+/* Contenedor principal */
+.delivery-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.892);
+  backdrop-filter: blur(8px);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px rgb(0, 0, 0);
+  width: 100%;
+  max-width: 900px;
+  color: #ffffff;
+}
+
+/* Título */
+h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+p {
+  font-size: 1rem;
+  color: #bbb;
+  margin-bottom: 1.5rem;
+}
+
+/* Mapa */
+#map {
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+thead {
+  background: #00cc9931;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  font-weight: 600;
+  color: #00d7a1;
+  font-size: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+td {
+  color: #ddd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Filas alternas */
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Hover fila */
+tbody tr:hover {
+  background: #01aa8013;
+  transition: background-color 0.2s ease;
+}
+
+/* Select */
+select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+select:focus {
+  border-color: #fff;
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+select option {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+
+/* Modo responsivo */
+@media (max-width: 768px) {
+  th, td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+/* Colores según status */
+.status-en-transito {
+  color: #d9821e; 
+  font-weight: 600;
+}
+
+.status-entregado {
+  color: #4caf50; 
+  font-weight: 600;
+}
+
+.status-regresado {
+  color: #f44336; 
+  font-weight: 600;
+}
