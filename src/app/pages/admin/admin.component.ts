@@ -39,7 +39,7 @@ export class AdminComponent implements OnInit {
   deliveryToAssign: string | null = null;
 
   private map: any;
-  private socket = io('http://localhost:3000');
+  private socket = io('https://tracker-backend12-703248740621.northamerica-northeast2.run.app');
   private allPaths: { [userId: string]: [number, number][] } = {};
   private userColors: { [userId: string]: string } = {};
   private displayedMarker: any = null;
@@ -157,7 +157,7 @@ assignPackage() {
   console.log('Headers enviados:', headers);  // <--- Aquí
 
   // 1️⃣ Crear paquete
-this.http.post('http://localhost:3000/api/packages', 
+this.http.post('https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/packages', 
   { address: this.newPackageAddress, deliveryId: this.deliveryToAssign }, 
   { headers }
 )

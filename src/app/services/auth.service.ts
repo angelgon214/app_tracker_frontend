@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:3000/api';
+  private baseUrl = 'https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api';
 
   constructor(private http: HttpClient, private router: Router) {}
 

@@ -34,7 +34,7 @@ export class DeliveryComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.socket = io('http://localhost:3000');
+    this.socket = io('https://tracker-backend12-703248740621.northamerica-northeast2.run.app');
   }
 
 async ngOnInit() {
@@ -140,7 +140,7 @@ async ngOnInit() {
       'Content-Type': 'application/json'
     });
 
-    this.http.post('http://localhost:3000/api/locations', { lat, lng }, { headers }).subscribe({
+    this.http.post('https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/locations', { lat, lng }, { headers }).subscribe({
       next: () => console.log('Ubicación enviada a backend:', lat, lng),
       error: err => console.error('Error enviando ubicación al backend:', err)
     });
@@ -168,7 +168,7 @@ emitLocationViaSocket(lat: number, lng: number) {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.get<{ id: number; address: string; status: string }[]>('http://localhost:3000/api/packages/my', { headers }).subscribe({
+    this.http.get<{ id: number; address: string; status: string }[]>('https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/packages/my', { headers }).subscribe({
       next: (data) => {
         console.log('Paquetes cargados:', data);
         this.packages = data;
@@ -196,7 +196,7 @@ emitLocationViaSocket(lat: number, lng: number) {
         'Content-Type': 'application/json'
       });
 
-      this.http.put('http://localhost:3000/api/packages/status', { packageId: pkgId, status: newStatus }, { headers }).subscribe({
+      this.http.put('https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/packages/status', { packageId: pkgId, status: newStatus }, { headers }).subscribe({
         next: () => console.log('Estado actualizado en backend'),
         error: err => console.error('Error al actualizar estado en backend:', err)
       });

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private api = 'http://localhost:3000/api/auth';
+  private api = 'https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/auth';
   private tokenKey = 'tracker_token';
 
   constructor(private http: HttpClient) {}
