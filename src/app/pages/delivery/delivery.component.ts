@@ -2,33 +2,27 @@ import { Component, OnDestroy, OnInit, Inject, PLATFORM_ID } from '@angular/core
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { io, Socket } from 'socket.io-client';
-import { HeaderComponent } from "../../components/header.component";
-
-let L: any;
+import { HeaderComponent } from '../../components/header.component';
 
 @Component({
   selector: 'app-delivery',
   standalone: true,
   imports: [CommonModule, HeaderComponent],
   templateUrl: './delivery.component.html',
-  styleUrls: ['./delivery.component.scss']
+  styleUrls: ['./delivery.component.scss'],
 })
 export class DeliveryComponent implements OnInit, OnDestroy {
   username: string = '';
   private intervalId: any;
   private socket: Socket;
-
   private map: any;
   private marker: any;
   private path: [number, number][] = [];
   private polyline: any;
   private customIcon: any;
+  private L: any; // Leaflet se almacenará aquí después de la carga dinámica
 
-  packages: {
-    id: number;
-    address: string;
-    status: string;
-  }[] = [];
+  packages: { id: number; address: string; status: string }[] = [];
 
   constructor(
     private http: HttpClient,
@@ -37,48 +31,55 @@ export class DeliveryComponent implements OnInit, OnDestroy {
     this.socket = io('https://tracker-backend12-703248740621.northamerica-northeast2.run.app');
   }
 
-async ngOnInit() {
-  if (!isPlatformBrowser(this.platformId)) return;
+  async ngOnInit() {
+    if (!isPlatformBrowser(this.platformId)) return;
 
-  this.username = localStorage.getItem('username') || '';
+    this.username = localStorage.getItem('username') || '';
 
-  const LModule = (await import('leaflet')).default;
-  L = LModule;
+    // Carga dinámica de Leaflet solo en el navegador
+    try {
+      const leaflet = await import('leaflet');
+      this.L = leaflet.default || leaflet; // Soporta tanto ESM como CommonJS
+      this.initMap();
+      this.startSendingLocation();
+      this.loadPackages();
 
-  this.initMap();
-  this.startSendingLocation();
-  this.loadPackages();
-
-  // Paquetes nuevos o actualizados vía socket
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const userId = user.id;
-  this.socket.on(`package-update-${userId}`, (pkg: any) => {
-    const index = this.packages.findIndex(p => p.id === pkg.id);
-    if (index > -1) {
-      // Actualizar paquete existente
-      this.packages[index] = { ...this.packages[index], ...pkg };
-    } else {
-      // Agregar nuevo paquete
-      this.packages.push(pkg);
+      // Paquetes nuevos o actualizados vía socket
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const userId = user.id;
+      this.socket.on(`package-update-${userId}`, (pkg: any) => {
+        const index = this.packages.findIndex((p) => p.id === pkg.id);
+        if (index > -1) {
+          // Actualizar paquete existente
+          this.packages[index] = { ...this.packages[index], ...pkg };
+        } else {
+          // Agregar nuevo paquete
+          this.packages.push(pkg);
+        }
+        console.log('Paquete actualizado vía socket:', pkg);
+      });
+    } catch (err) {
+      console.error('Error cargando Leaflet:', err);
     }
-    console.log('Paquete actualizado vía socket:', pkg);
-  });
-}
-
+  }
 
   ngOnDestroy() {
-    clearInterval(this.intervalId);
+    if (isPlatformBrowser(this.platformId) && this.intervalId) {
+      clearInterval(this.intervalId);
+    }
     this.socket.disconnect();
   }
 
-  initMap() {
-    this.map = L.map('map').setView([20.5888, -100.3899], 13);
+  private initMap() {
+    if (!isPlatformBrowser(this.platformId) || !this.L) return;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+    this.map = this.L.map('map').setView([20.5888, -100.3899], 13);
+
+    this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
     }).addTo(this.map);
 
-    this.customIcon = L.icon({
+    this.customIcon = this.L.icon({
       iconUrl: 'assets/marker.png',
       iconSize: [32, 32],
       iconAnchor: [16, 32],
@@ -86,12 +87,14 @@ async ngOnInit() {
       shadowUrl: '',
     });
 
-    this.polyline = L.polyline([], { color: 'blue' }).addTo(this.map);
+    this.polyline = this.L.polyline([], { color: 'blue' }).addTo(this.map);
 
     console.log('Mapa inicializado:', this.map);
   }
 
-  startSendingLocation() {
+  private startSendingLocation() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -119,11 +122,13 @@ async ngOnInit() {
     }
   }
 
-  updateMapPosition(lat: number, lng: number) {
+  private updateMapPosition(lat: number, lng: number) {
+    if (!isPlatformBrowser(this.platformId) || !this.L) return;
+
     if (this.marker) {
       this.marker.setLatLng([lat, lng]);
     } else {
-      this.marker = L.marker([lat, lng], { icon: this.customIcon }).addTo(this.map);
+      this.marker = this.L.marker([lat, lng], { icon: this.customIcon }).addTo(this.map);
     }
 
     this.path.push([lat, lng]);
@@ -131,52 +136,64 @@ async ngOnInit() {
     this.map.setView([lat, lng]);
   }
 
-  sendLocationToBackend(lat: number, lng: number) {
+  private sendLocationToBackend(lat: number, lng: number) {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     });
 
-    this.http.post('https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/locations', { lat, lng }, { headers }).subscribe({
-      next: () => console.log('Ubicación enviada a backend:', lat, lng),
-      error: err => console.error('Error enviando ubicación al backend:', err)
+    this.http
+      .post(
+        'https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/locations',
+        { lat, lng },
+        { headers }
+      )
+      .subscribe({
+        next: () => console.log('Ubicación enviada a backend:', lat, lng),
+        error: (err) => console.error('Error enviando ubicación al backend:', err),
+      });
+  }
+
+  private emitLocationViaSocket(lat: number, lng: number) {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const username = user.username || 'Anónimo';
+    const userId = user.id;
+
+    this.socket.emit('location-update', {
+      userId,
+      username,
+      latitude: lat,
+      longitude: lng,
     });
   }
 
-emitLocationViaSocket(lat: number, lng: number) {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const username = user.username || 'Anónimo';
-  const userId = user.id;
-
-  this.socket.emit('location-update', {
-    userId,
-    username,
-    latitude: lat,
-    longitude: lng
-  });
-}
-
-  
-  loadPackages() {
+  private loadPackages() {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
-    this.http.get<{ id: number; address: string; status: string }[]>('https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/packages/my', { headers }).subscribe({
-      next: (data) => {
-        console.log('Paquetes cargados:', data);
-        this.packages = data;
-      },
-      error: (err) => {
-        console.error('Error al cargar paquetes:', err);
-      }
-    });
+    this.http
+      .get<{ id: number; address: string; status: string }[]>(
+        'https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/packages/my',
+        { headers }
+      )
+      .subscribe({
+        next: (data) => {
+          console.log('Paquetes cargados:', data);
+          this.packages = data;
+        },
+        error: (err) => {
+          console.error('Error al cargar paquetes:', err);
+        },
+      });
   }
 
   updatePackageStatus(pkgId: number, event: Event) {
@@ -185,21 +202,27 @@ emitLocationViaSocket(lat: number, lng: number) {
     const selectElement = event.target as HTMLSelectElement;
     const newStatus = selectElement.value;
 
-    const pkg = this.packages.find(p => p.id === pkgId);
+    const pkg = this.packages.find((p) => p.id === pkgId);
     if (pkg) {
       pkg.status = newStatus;
       console.log(`Paquete ${pkgId} actualizado a estado: ${newStatus}`);
 
       const token = localStorage.getItem('token');
       const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       });
 
-      this.http.put('https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/packages/status', { packageId: pkgId, status: newStatus }, { headers }).subscribe({
-        next: () => console.log('Estado actualizado en backend'),
-        error: err => console.error('Error al actualizar estado en backend:', err)
-      });
-    }
+      this.http
+        .put(
+          'https://tracker-backend12-703248740621.northamerica-northeast2.run.app/api/packages/status',
+          { packageId: pkgId, status: newStatus },
+          { headers }
+        )
+        .subscribe({
+          next: () => console.log('Estado actualizado en backend'),
+          error: (err) => console.error('Error al actualizar estado en backend:', err),
+        });
+      }
   }
 }
