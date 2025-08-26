@@ -1,15 +1,11 @@
-FROM node:20-alpine
-
+FROM node:20-alpine AS build
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm install
-
 COPY . .
+RUN npm run build -- --configuration=production
 
-RUN npm run build
-
-ENV PORT=8080
-EXPOSE 8080
-
-CMD ["npm", "run", "serve:ssr:tracker_frontend"]
+FROM nginx:alpine
+COPY --from=build /app/dist/tracker_frontend /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
